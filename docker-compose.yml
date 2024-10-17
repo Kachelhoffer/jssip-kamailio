@@ -1,0 +1,23 @@
+version: '3'
+services:
+  webapp:
+    build: .
+    ports:
+      - "80:80"
+
+  kamailio:
+    image: kamailio/kamailio:5.5.0-bullseye
+    ports:
+      - "5060:5060/udp"
+      - "5060:5060/tcp"
+      - "8443:8443"
+    volumes:
+      - ./kamailio:/etc/kamailio
+    command: kamailio -DD -E
+
+  rtpengine:
+    image: sipwise/rtpengine:latest
+    network_mode: host
+    volumes:
+      - ./rtpengine:/etc/rtpengine
+    command: rtpengine --foreground --log-level=7
